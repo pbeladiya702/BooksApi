@@ -10,14 +10,33 @@ router.get("/books",async (req,res)=>{
 
 //insert record
 router.post("/books",async(req,res)=>{
-    const book = new Book({
-        name:req.body.name,
-        qty:req.body.qty
-    });
-    await book.save();
-    res.send(book);
+
+    try {
+        const book = new Book({
+            name:req.body.name,
+            qty:req.body.qty
+        });
+        await book.save();
+        res.send(book);
+    } catch (error) {
+        res.status(404).send(error);
+    }
+    
 });
 
+//update record
+router.patch("/books/:id",async(req,res)=>{
+    try {
+        const book = await Book.findOne({_id:req.params.id});
+        book.name=req.body.name;
+
+        await book.save();
+        res.send(book);
+
+    } catch (error) {
+        res.send(error);
+    }
+});
 //delete record
 router.delete("/books/:id",async(req,res)=>{
 
